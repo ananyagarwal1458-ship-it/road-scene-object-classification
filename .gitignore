@@ -1,0 +1,3 @@
+__pycache__/
+*.pyc
+outputs/demo_prediction.png
