@@ -1,0 +1,14 @@
+Test accuracy: 1.0000
+Test loss: 0.0005
+
+              precision    recall  f1-score   support
+
+     bicycle      1.000     1.000     1.000        25
+         bus      1.000     1.000     1.000        25
+         car      1.000     1.000     1.000        25
+  motorcycle      1.000     1.000     1.000        25
+  pedestrian      1.000     1.000     1.000        25
+
+    accuracy                          1.000       125
+   macro avg      1.000     1.000     1.000       125
+weighted avg      1.000     1.000     1.000       125

@@ -1,0 +1,66 @@
+Stress-test accuracy: 0.5600 (clean test accuracy: 1.0000)
+Corruptions applied: extreme scale/position, ~50% partial occlusion, ~50% low-light darkening, heavy Gaussian blur, additive pixel noise.
+
+Confused class pairs (true -> predicted : count):
+  car -> motorcycle : 6
+  bus -> car : 5
+  pedestrian -> motorcycle : 5
+  bicycle -> car : 4
+  pedestrian -> bicycle : 4
+  bicycle -> motorcycle : 3
+  bus -> bicycle : 3
+  car -> bicycle : 3
+  pedestrian -> car : 3
+  bus -> motorcycle : 2
+  bicycle -> pedestrian : 1
+  car -> pedestrian : 1
+  motorcycle -> bicycle : 1
+  motorcycle -> bus : 1
+  motorcycle -> car : 1
+  motorcycle -> pedestrian : 1
+
+Total misclassified: 44 / 100
+  sample #0: true=bicycle pred=car confidence=0.929
+  sample #1: true=bicycle pred=car confidence=0.824
+  sample #3: true=bicycle pred=car confidence=0.451
+  sample #5: true=bicycle pred=motorcycle confidence=0.873
+  sample #10: true=bicycle pred=car confidence=0.557
+  sample #12: true=bicycle pred=pedestrian confidence=0.496
+  sample #14: true=bicycle pred=motorcycle confidence=0.982
+  sample #19: true=bicycle pred=motorcycle confidence=0.972
+  sample #21: true=bus pred=car confidence=0.578
+  sample #22: true=bus pred=car confidence=0.654
+  sample #25: true=bus pred=bicycle confidence=0.639
+  sample #26: true=bus pred=motorcycle confidence=0.864
+  sample #27: true=bus pred=bicycle confidence=0.524
+  sample #28: true=bus pred=motorcycle confidence=0.742
+  sample #30: true=bus pred=car confidence=0.909
+  sample #33: true=bus pred=car confidence=0.605
+  sample #36: true=bus pred=car confidence=0.643
+  sample #38: true=bus pred=bicycle confidence=0.957
+  sample #40: true=car pred=pedestrian confidence=0.277
+  sample #42: true=car pred=bicycle confidence=0.317
+  sample #45: true=car pred=bicycle confidence=0.940
+  sample #46: true=car pred=bicycle confidence=0.835
+  sample #48: true=car pred=motorcycle confidence=0.612
+  sample #50: true=car pred=motorcycle confidence=0.626
+  sample #56: true=car pred=motorcycle confidence=0.927
+  sample #57: true=car pred=motorcycle confidence=0.781
+  sample #58: true=car pred=motorcycle confidence=0.767
+  sample #59: true=car pred=motorcycle confidence=0.544
+  sample #69: true=motorcycle pred=bicycle confidence=0.505
+  sample #70: true=motorcycle pred=bus confidence=0.336
+  sample #71: true=motorcycle pred=car confidence=0.956
+  sample #74: true=motorcycle pred=pedestrian confidence=0.844
+  sample #80: true=pedestrian pred=motorcycle confidence=0.796
+  sample #81: true=pedestrian pred=bicycle confidence=0.674
+  sample #82: true=pedestrian pred=bicycle confidence=0.732
+  sample #86: true=pedestrian pred=motorcycle confidence=0.963
+  sample #89: true=pedestrian pred=motorcycle confidence=0.998
+  sample #90: true=pedestrian pred=car confidence=0.398
+  sample #91: true=pedestrian pred=bicycle confidence=0.743
+  sample #92: true=pedestrian pred=car confidence=0.561
+  sample #93: true=pedestrian pred=car confidence=0.932
+  sample #94: true=pedestrian pred=motorcycle confidence=0.943
+  sample #95: true=pedestrian pred=motorcycle confidence=0.932
+  sample #96: true=pedestrian pred=bicycle confidence=0.533
