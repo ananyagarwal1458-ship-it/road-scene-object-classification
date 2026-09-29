@@ -34,9 +34,17 @@ from torchvision import models
 
 
 def build_model(num_classes: int, freeze_backbone: bool = True):
-    """Returns (model, used_pretrained_weights: bool)."""
+    """Returns (model, used_pretrained_weights: bool).
+
+    Builds a ResNet-18 for transfer learning: the ImageNet-pretrained
+    backbone is (optionally) frozen and the final classification layer is
+    replaced with a new one sized for `num_classes`.
+    """
+    # Tracks whether we actually got pretrained weights, so the caller can
+    # tell a real transfer-learning run from a fallback sanity-check run.
     used_pretrained = True
     try:
+        # Downloads the ImageNet weights on first use (cached afterwards).
         backbone = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
     except Exception as e:  # network unreachable, hub down, etc.
         warnings.warn(
@@ -46,33 +54,57 @@ def build_model(num_classes: int, freeze_backbone: bool = True):
             "NOT a measure of transfer-learning accuracy — re-run with "
             "internet access for the real result."
         )
+        # Random init: same architecture, no learned features.
         backbone = models.resnet18(weights=None)
         used_pretrained = False
+        # Freezing random weights would make the model untrainable in practice
+        # (only the head would learn on top of noise), so force full training.
         freeze_backbone = False
 
     if freeze_backbone:
+        # Feature extraction mode: keep pretrained weights fixed so only the
+        # new head is updated. Faster and less prone to overfitting on small
+        # datasets.
         for param in backbone.parameters():
             param.requires_grad = False
 
+    # ResNet-18's original head maps 512 features -> 1000 ImageNet classes.
+    # Swap it for a layer that outputs our own number of classes.
     in_features = backbone.fc.in_features
+    # Newly created layers have requires_grad=True by default, so this head
+    # is trainable even if the rest of the backbone was frozen above.
     backbone.fc = nn.Linear(in_features, num_classes)  # new head is always trainable
 
     return backbone, used_pretrained
 
 
 def unfreeze_last_block(model):
-    """Unfreeze layer4 (the last residual block) + the head for fine-tuning."""
+    """Unfreeze layer4 (the last residual block) + the head for fine-tuning.
+
+    Typical two-stage workflow: first train just the head with the backbone
+    frozen, then call this and continue training with a lower learning rate
+    so the deepest (most task-specific) features can adapt to your data.
+    """
     for name, param in model.named_parameters():
+        # Parameter names look like "layer4.1.conv2.weight" or "fc.bias",
+        # so a prefix check selects the last block and the classifier.
         if name.startswith("layer4") or name.startswith("fc"):
             param.requires_grad = True
     return model
 
 
 def trainable_parameters(model):
+    """Return only the parameters the optimizer should update.
+
+    Pass this to the optimizer (e.g. torch.optim.Adam) so frozen weights
+    aren't tracked. If you unfreeze more layers later, rebuild the optimizer.
+    """
     return [p for p in model.parameters() if p.requires_grad]
 
 
 def count_params(model):
+    """Return (total, trainable) parameter counts, handy for sanity-checking
+    that freezing/unfreezing did what you expected."""
     total = sum(p.numel() for p in model.parameters())
     trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
     return total, trainable
