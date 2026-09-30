@@ -81,58 +81,57 @@ if uploaded_file is not None:
     )
     
     if st.button("🔍 Classify Image"):
-        _, eval_tf = get_transforms()
-
-    x = eval_tf(image).unsqueeze(0).to(DEVICE)
-
-    with torch.no_grad():
-
-        probabilities = torch.softmax(
+        eval_tf = get_transforms()[1]
+        x = eval_tf(image).unsqueeze(0).to(DEVICE)
+       
+        with torch.no_grad():
+            probabilities = torch.softmax(
             model(x),
             dim=1
-        )[0].cpu()
-
-    predicted_index = torch.argmax(
+            )[0].cpu()
+            
+        predicted_index = torch.argmax(
         probabilities
-    ).item()
+        ).item()
 
-    predicted_class = classes[predicted_index]
+        predicted_class = classes[predicted_index]
 
-    confidence = (
+        confidence = (
         probabilities[predicted_index].item()
         * 100
-    )
+        )
+        st.divider()
 
-    st.divider()
+        st.subheader("🎯 Prediction")
 
-    st.subheader("🎯 Prediction")
-
-    st.success(
-        f"Predicted Class: {predicted_class.upper()}"
-    )
-
-    st.metric(
-        "Confidence",
-        f"{confidence:.2f}%"
-    )
-
-    st.subheader("📊 Class Probabilities")
-
-    # Sort from highest to lowest
-    ranked_probabilities = sorted(
-        zip(classes, probabilities.tolist()),
-        key=lambda x: x[1],
-        reverse=True
-    )
-
-    for class_name, probability in ranked_probabilities:
-
-        probability = probability * 100
-
-        st.write(
-            f"{class_name}: {probability:.2f}%"
+        st.success(
+    
+            f"Predicted Class: {predicted_class.upper()}"
         )
 
-        st.progress(
-            int(probability)
+        st.metric(
+    
+            "Confidence",
+    
+            f"{confidence:.2f}%"
+
         )
+
+        st.subheader("📊 Class Probabilities")
+
+        # Sort from highest to lowest
+        ranked_probabilities = sorted(
+    
+            zip(classes, probabilities.tolist()),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        for class_name, probability in ranked_probabilities:
+            probability = probability * 100
+            st.write(
+                f"{class_name}: {probability:.2f}%"
+            )
+            st.progress(
+                int(probability)
+            )
