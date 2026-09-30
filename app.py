@@ -119,16 +119,21 @@ if uploaded_file is not None:
 
         st.subheader("📊 Class Probabilities")
 
-        for i, class_name in enumerate(classes):
+# Sort probabilities from highest to lowest
+ranked_probabilities = sorted(
+    zip(classes, probabilities.tolist()),
+    key=lambda x: x[1],
+    reverse=True
+)
 
-            probability = (
-                probabilities[i].item() * 100
-            )
+for class_name, probability in ranked_probabilities:
 
-            st.write(
-                f"{class_name}: {probability:.2f}%"
-            )
+    probability = probability * 100
 
-            st.progress(
-                int(probability)
-            )
+    st.write(
+        f"{class_name}: {probability:.2f}%"
+    )
+
+    st.progress(
+        int(probability)
+    )
