@@ -79,10 +79,9 @@ if uploaded_file is not None:
         caption="Uploaded Image",
         use_container_width=True
     )
-
+    
     if st.button("🔍 Classify Image"):
-
-    _, eval_tf = get_transforms()
+        _, eval_tf = get_transforms()
 
     x = eval_tf(image).unsqueeze(0).to(DEVICE)
 
